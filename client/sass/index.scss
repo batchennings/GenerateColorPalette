@@ -1,0 +1,25 @@
+@import "variables";
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+// html, body {
+//   margin: 0;
+//   padding: 0;
+// }
+#color-swatches {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    .color-node {
+        //width: 180px;
+        display: flex;
+        flex-direction: row;
+        gap: 32px;
+        padding: 16px;
+        .status {
+            font-size: 13px;
+            padding: 4px 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 48px;
+        }
+    }
+}

@@ -4,11 +4,11 @@ import rgb2hsl from "./utils/rgb2hsl"
 import scale from "./utils/scale"
 
 const LUM_MAX = 95
-const LUM_MIN = 15
-const HUE_COEFF_TO_LIGHT = 0.005
-const HUE_COEFF_TO_DARK = 0.02
-const SATURATION_COEFF_TO_LIGHT = 0.01
-const SATURATION_COEFF_TO_DARK = -0.05
+const LUM_MIN = 10
+const HUE_COEFF_TO_LIGHT = 0.5
+const HUE_COEFF_TO_DARK = 0.5
+const SATURATION_COEFF_TO_LIGHT = 0.5
+const SATURATION_COEFF_TO_DARK = -0.5
 
 // Le coeur de l'app : permet d'obtenir une palette de couleur depuis une couleur de base
 export default function getColorsPalette(color) {
@@ -40,7 +40,8 @@ export default function getColorsPalette(color) {
             const newTint = {
                 h: getHue(hslValue.h, i, swatchPosition),
                 s: getSaturation(hslValue.s, i, swatchPosition),
-                l: scale(i, 0, colorsArray.length, LUM_MAX, LUM_MIN)
+                l: getLuminosity(hslValue.l, i, swatchPosition)
+                //l: scale(i, 0, colorsArray.length, LUM_MAX, LUM_MIN)
             }
             colorsArray[i] = {
                 hexa: hsl2hex(newTint.h, newTint.s, newTint.l),
@@ -56,9 +57,10 @@ export default function getColorsPalette(color) {
     }
     // ajouter le 950
     const darkTint = { 
-        h: checkTreshold(colorsArray[colorsArray.length-1].hsl.h+3, 360, "HIGH"), 
+        h: checkHue(colorsArray[colorsArray.length-1].hsl.h+3), 
         s: checkTreshold(colorsArray[colorsArray.length-1].hsl.s+3, 100, "HIGH"), 
-        l: checkTreshold(colorsArray[colorsArray.length-1].hsl.l-5, 0, "LOW")}
+        l: checkTreshold(colorsArray[colorsArray.length-1].hsl.l-5, 0, "LOW")
+    }
 
     colorsArray.push({
         hexa: hsl2hex(darkTint.h, darkTint.s, darkTint.l),
@@ -75,38 +77,40 @@ export default function getColorsPalette(color) {
 }
 function getHue(baseHue, currentPosition, basePosition) {
     let newHue;
-    const coeffToLight = baseHue * HUE_COEFF_TO_LIGHT
-    const coeffToDark = baseHue * HUE_COEFF_TO_DARK
     if (currentPosition < basePosition) {
-        newHue = baseHue - ((basePosition - currentPosition) * coeffToLight) 
-        newHue = checkTreshold(newHue, 0, "LOW")
+        newHue = baseHue - ((basePosition - currentPosition) * HUE_COEFF_TO_LIGHT) 
+        newHue = checkHue(newHue)
     }
     if (currentPosition > basePosition) { // si la teinte est plus sombre
-        newHue = baseHue + ((currentPosition - basePosition) * coeffToDark)
-        // newHue < 360 ? newHue = newHue : newHue = 360
-        newHue = checkTreshold(newHue, 360, "HIGH")
+        newHue = baseHue + ((currentPosition - basePosition) * HUE_COEFF_TO_DARK)
+        newHue = checkHue(newHue)
     }
     return newHue
 }
 function getSaturation(baseSaturation, currentPosition, basePosition) {
     let newSaturation;
-    const coeffToLight = baseSaturation * SATURATION_COEFF_TO_LIGHT
-    const coeffToDark = baseSaturation * SATURATION_COEFF_TO_DARK
     if (currentPosition < basePosition) { // si la teinte est plus claire
-        // prendre l'écart avec cette teinte, appliquer un coeff de désaturation
-        // tant que la valeur est supérieure à 0, appliquer, sinon, 0
-        newSaturation = baseSaturation - ((basePosition - currentPosition) * coeffToLight)
-        //newSaturation > 0 ? newSaturation = newSaturation : newSaturation = 0
+        newSaturation = baseSaturation - ((basePosition - currentPosition) * SATURATION_COEFF_TO_LIGHT)
         newSaturation = checkTreshold(newSaturation, 0, "LOW")
     }
     if (currentPosition > basePosition) { // si la teinte est plus sombre
-        // prendre l'écart avec cette teinte, appliquer un coeff de saturation
-        // tant que la valeur est inférieure à 100, appliquer, sinon, 100
-        newSaturation = baseSaturation + ((currentPosition - basePosition) * coeffToDark)
-        //newSaturation < 100 ? newSaturation = newSaturation : newSaturation = 100
+        newSaturation = baseSaturation + ((currentPosition - basePosition) * SATURATION_COEFF_TO_DARK)
         newSaturation = checkTreshold(newSaturation, 100, "HIGH")
     }
     return newSaturation
+}
+function getLuminosity(baseLuminosity, currentPosition, basePosition) {
+    let newLuminosity;
+    newLuminosity = scale(currentPosition, 0, 10, LUM_MAX, LUM_MIN)
+    // if (currentPosition < basePosition) { // si la teinte est plus claire
+    //     newLuminosity = baseLuminosity - ((basePosition - currentPosition) * LUMINOSITY_COEFF_TO_LIGHT)
+    //     newLuminosity = checkTreshold(newLuminosity, 0, "LOW")
+    // }
+    // if (currentPosition > basePosition) { // si la teinte est plus sombre
+    //     newLuminosity = baseLuminosity + ((currentPosition - basePosition) * LUMINOSITY_COEFF_TO_DARK)
+    //     newLuminosity = checkTreshold(newLuminosity, 100, "HIGH")
+    // }
+    return newLuminosity
 }
 
 // fonction qui permet de savoir si une valeur ne dépasse pas les seuils haut ou bas
@@ -118,4 +122,16 @@ function checkTreshold(value, threshold, type){
         value < threshold ? ridge = threshold : ridge = value
     }
     return ridge
+}
+function checkHue(value){
+    let newHue;
+    const hueLimit = 360
+    if(value > hueLimit) { 
+        newHue = value - hueLimit
+    } else if (value < 0)  { 
+        newHue = hueLimit + value
+    } else {
+        newHue = value
+    }
+    return newHue
 }

@@ -1,4 +1,6 @@
 import getColorsPalette from "./getColorsPalette";
+import contrastCheck from "./utils/contrastCheck"
+import hex2rgb from "./utils/hex2rgb";
 
 const submit = document.getElementById("submit");
 const colorSwatches = document.getElementById("color-swatches");
@@ -39,9 +41,18 @@ function displayColorPalette(colorsPalette) {
             colorStatus.innerHTML = "Base"
             colorNode.appendChild(colorStatus);
         }
-
+        const colorRgb = hex2rgb(color.hexa)
+        const contrastWithBlack = contrastCheck([0,0,0], [colorRgb.r, colorRgb.g, colorRgb.b])
+        
         //newNode.innerHTML = color.name
         colorNode.setAttribute("style", "background-color:" + color.hexa + ";")
+        contrastWithBlack < 7 ? colorNode.classList.add("dark") : colorNode.classList.add("light")
         colorSwatches.appendChild(colorNode)
     });
+    displayContrast(colorsPalette)
+}
+function displayContrast(colorsPalette){
+    const contrastNode = document.createElement('div');
+    console.log(colorsPalette);
+    contrastNode.innerHTML = "Contraste ici"
 }

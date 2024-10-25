@@ -3,7 +3,7 @@ import hsl2hex from "./utils/hsl2hex"
 import rgb2hsl from "./utils/rgb2hsl"
 import scale from "./utils/scale"
 
-const LUM_MAX = 95
+const LUM_MAX = 98
 const LUM_MIN = 10
 const HUE_COEFF_TO_LIGHT = 0.5
 const HUE_COEFF_TO_DARK = 0.5
@@ -25,6 +25,11 @@ export default function getColorsPalette(color) {
 
     colorsArray[swatchPosition] = {
         hexa: color,
+        rgb: {
+            r: rgbValue.r,
+            g: rgbValue.g,
+            b: rgbValue.b
+        },
         hsl: {
             h: hslValue.h,
             s: hslValue.s,
@@ -37,38 +42,36 @@ export default function getColorsPalette(color) {
     for (let i = 0; i < colorsArray.length; i++) {
         if (colorsArray[i] == null) {
             //on donne la teinte, saturation, luminosité
-            const newTint = {
+            const newTintHsl = {
                 h: getHue(hslValue.h, i, swatchPosition),
                 s: getSaturation(hslValue.s, i, swatchPosition),
                 l: getLuminosity(hslValue.l, i, swatchPosition)
                 //l: scale(i, 0, colorsArray.length, LUM_MAX, LUM_MIN)
             }
+            const newTintHexa = hsl2hex(newTintHsl.h, newTintHsl.s, newTintHsl.l)
+            const newTintRgb = hex2rgb(newTintHexa)
             colorsArray[i] = {
-                hexa: hsl2hex(newTint.h, newTint.s, newTint.l),
-                hsl: {
-                    h: newTint.h,
-                    s: newTint.s,
-                    l: newTint.l
-                },
+                hexa: newTintHexa,
+                rgb: newTintRgb,
+                hsl: newTintHsl,
                 name: i == 0 ? "color-50" : "color-" + (i * 100),
                 isBase: false
             }
         }
     }
     // ajouter le 950
-    const darkTint = { 
-        h: checkHue(colorsArray[colorsArray.length-1].hsl.h+3), 
-        s: checkTreshold(colorsArray[colorsArray.length-1].hsl.s+3, 100, "HIGH"), 
-        l: checkTreshold(colorsArray[colorsArray.length-1].hsl.l-5, 0, "LOW")
+    const darkTintHsl = {
+        h: checkHue(colorsArray[colorsArray.length - 1].hsl.h + 3),
+        s: checkTreshold(colorsArray[colorsArray.length - 1].hsl.s + 3, 100, "HIGH"),
+        l: checkTreshold(colorsArray[colorsArray.length - 1].hsl.l - 5, 0, "LOW")
     }
+    const darkTintHexa = hsl2hex(darkTintHsl.h, darkTintHsl.s, darkTintHsl.l)
+    const darkTintRgb = hex2rgb(darkTintHexa)
 
     colorsArray.push({
-        hexa: hsl2hex(darkTint.h, darkTint.s, darkTint.l),
-        hsl: {
-            h: darkTint.h,
-            s: darkTint.s,
-            l: darkTint.l
-        },
+        hexa: darkTintHexa,
+        rgb: darkTintRgb,
+        hsl: darkTintHsl,
         name: "color-950",
         isBase: false
 
@@ -78,7 +81,7 @@ export default function getColorsPalette(color) {
 function getHue(baseHue, currentPosition, basePosition) {
     let newHue;
     if (currentPosition < basePosition) {
-        newHue = baseHue - ((basePosition - currentPosition) * HUE_COEFF_TO_LIGHT) 
+        newHue = baseHue - ((basePosition - currentPosition) * HUE_COEFF_TO_LIGHT)
         newHue = checkHue(newHue)
     }
     if (currentPosition > basePosition) { // si la teinte est plus sombre
@@ -114,21 +117,21 @@ function getLuminosity(baseLuminosity, currentPosition, basePosition) {
 }
 
 // fonction qui permet de savoir si une valeur ne dépasse pas les seuils haut ou bas
-function checkTreshold(value, threshold, type){
+function checkTreshold(value, threshold, type) {
     let ridge;
-    if(type == "HIGH") { // si le seuil est la valeur max
+    if (type == "HIGH") { // si le seuil est la valeur max
         value > threshold ? ridge = threshold : ridge = value
-    } else if (type == "LOW")  { // si le seuil est la valeur min
+    } else if (type == "LOW") { // si le seuil est la valeur min
         value < threshold ? ridge = threshold : ridge = value
     }
     return ridge
 }
-function checkHue(value){
+function checkHue(value) {
     let newHue;
     const hueLimit = 360
-    if(value > hueLimit) { 
+    if (value > hueLimit) {
         newHue = value - hueLimit
-    } else if (value < 0)  { 
+    } else if (value < 0) {
         newHue = hueLimit + value
     } else {
         newHue = value

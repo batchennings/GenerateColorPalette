@@ -1,20 +1,22 @@
-# Sample JS app
+# Generate Color Palette
+Tool that helps creating a complete color scale, like [Tailwind does](https://tailwindcss.com/docs/customizing-colors#naming-your-colors). written in Vanilla JS.
+
+![alt text](./client/assets/images/screenshot.ong)
+
 ## What's inside
-- serveur node
-  - ou encore plus simple python en ajoutant `"start-server": "python -m http.server 4480",`
-- chargement de json
+- node server
+- Vanilla JS
 - bootstrap + scss
-- webpack config (checker webpack.config.simple.js pour juste le minimum)
+- webpack config
 
-## Démarrage
-
-Mettre à jour les dépendances avant d'installer les `nodes_modules`
+## Launch
 ``` shell
 npm i -g npm-check-updates
 ncu -u
 npm install
 ```
-
-Ne pas oublier de copier le `.gitignore`
-
+Then
+```shell
+npm start # starts app on port 3000
+```
 

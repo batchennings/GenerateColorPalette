@@ -3,10 +3,6 @@ import hsl2hex from "./utils/hsl2hex"
 import rgb2hsl from "./utils/rgb2hsl"
 import scale from "./utils/scale"
 
-
-
-const LUM_MAX = 98
-const LUM_MIN = 15
 const HUE_COEFF_TO_LIGHT = 0.5
 const HUE_COEFF_TO_DARK = 0.5
 const SATURATION_COEFF_TO_LIGHT = 0.5
@@ -15,7 +11,6 @@ const SATURATION_COEFF_TO_DARK = -0.5
 
 const HUES = ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900", "950"]
 let LUMINOSITY_RANGE = [96, 90, 82, 73, 55, 47, 39, 31, 23, 15, 10]
-
 
 function getSwatchPosition(luminosity) {
     let position
@@ -35,21 +30,11 @@ export default function getColorsPalette(color) {
     const rgbValue = hex2rgb(color)
     const hslValue = rgb2hsl(rgbValue.r, rgbValue.g, rgbValue.b)
 
-    //console.log(LUMINOSITY_RANGE);
-
     const colorsArray = Array(HUES.length)
 
     // determiner la position de la couleur dans le nuancier
     //// prendre la valeur de luminosité, (100 - Math.round(value/10))
-
-    //const swatchBase = scale(Math.round(hslValue.l / 10), 0, 10, 1000, 0)
-    //const swatchPosition = scale(Math.round(hslValue.l / 10), 0, 10, 11, 0)
     const swatchPosition = getSwatchPosition(hslValue.l)
-    //console.log(swatchPosition);
-
-
-    //console.log(hslValue.l, swatchBase, swatchPosition);
-
 
     colorsArray[swatchPosition] = {
         hexa: color,
@@ -69,7 +54,6 @@ export default function getColorsPalette(color) {
 
     for (let i = 0; i < colorsArray.length; i++) {
         if (colorsArray[i] == null) {
-            //console.log(LUMINOSITY_RANGE[i]);
 
             //on donne la teinte, saturation, luminosité
             const newTintHsl = {
@@ -77,7 +61,6 @@ export default function getColorsPalette(color) {
                 s: getSaturation(hslValue.s, i, swatchPosition),
                 l: getLuminosity(hslValue.l, i, swatchPosition)
             }
-            //console.log(newTintHsl);
 
             const newTintHexa = hsl2hex(newTintHsl.h, newTintHsl.s, newTintHsl.l)
             const newTintRgb = hex2rgb(newTintHexa)
@@ -90,23 +73,6 @@ export default function getColorsPalette(color) {
             }
         }
     }
-    // ajouter le 950
-    // const darkTintHsl = {
-    //     h: checkHue(colorsArray[PALETTE_LENGTH-2].hsl.h + 3),
-    //     s: checkTreshold(colorsArray[PALETTE_LENGTH-2].hsl.s + 3, 100, "HIGH"),
-    //     l: LUM_MIN
-    // }
-    // const darkTintHexa = hsl2hex(darkTintHsl.h, darkTintHsl.s, darkTintHsl.l)
-    // const darkTintRgb = hex2rgb(darkTintHexa)
-
-    // colorsArray[PALETTE_LENGTH-1] = {
-    //     hexa: darkTintHexa,
-    //     rgb: darkTintRgb,
-    //     hsl: darkTintHsl,
-    //     name: "color-950",
-    //     isBase: false
-
-    // }
     return colorsArray
 }
 function getHue(baseHue, currentPosition, basePosition) {
@@ -135,9 +101,6 @@ function getSaturation(baseSaturation, currentPosition, basePosition) {
 }
 function getLuminosity(baseLuminosity, currentPosition, basePosition) {
     let newLuminosity;
-    // if (currentPosition > 1 && currentPosition < LUMINOSITY_RANGE.length-2){
-
-    // }
     if (currentPosition == basePosition - 1) {
         newLuminosity = baseLuminosity + ((LUMINOSITY_RANGE[basePosition - 2] - baseLuminosity) / 2)
     } else if (currentPosition == basePosition + 1) {

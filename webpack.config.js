@@ -3,7 +3,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: ['./src/js/index.ts', './src/sass/index.scss'],
+  entry: ['./src/ts/index.ts', './src/sass/index.scss'],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'js/bundle.js'

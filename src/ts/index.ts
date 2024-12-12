@@ -9,7 +9,7 @@ const colorSwatches = document.getElementById("color-swatches");
     submit.addEventListener("click", validate);
 })();
 
-function validate(e) {
+function validate(e:UIEvent) {
     e.preventDefault();
     const colorField = document.getElementById("color") as HTMLInputElement;
     const color = colorField.value;

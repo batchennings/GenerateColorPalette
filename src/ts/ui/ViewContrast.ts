@@ -1,4 +1,4 @@
-import contrastCheck from "../utils/contrastCheck";
+import contrastCheck from "../generate-color-palette/utils/contrastCheck";
 
 export default function ViewContrast(container, colorsPalette) {
     const contrast50To500 = contrastCheck([

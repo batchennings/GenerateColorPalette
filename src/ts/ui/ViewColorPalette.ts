@@ -1,4 +1,4 @@
-import contrastCheck from "../utils/contrastCheck";
+import contrastCheck from "../generate-color-palette/utils/contrastCheck";
 
 // Afficher le nuancier
 export default function ViewColorPalette(container, colorsPalette) {

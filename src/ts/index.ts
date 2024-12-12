@@ -1,4 +1,4 @@
-import getColorsPalette from "./getColorsPalette";
+import getColorsPalette from "./generate-color-palette/getColorsPalette";
 import ViewColorPalette from "./ui/ViewColorPalette";
 import ViewContrast from "./ui/ViewContrast";
 

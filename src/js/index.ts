@@ -11,7 +11,7 @@ const colorSwatches = document.getElementById("color-swatches");
 
 function validate(e) {
     e.preventDefault();
-    const colorField = document.getElementById("color");
+    const colorField = document.getElementById("color") as HTMLInputElement;
     const color = colorField.value;
     const colorsPalette = getColorsPalette(color);
 

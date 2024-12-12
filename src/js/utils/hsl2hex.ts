@@ -1,4 +1,4 @@
-export default function hsl2hex(h, s, l) {
+export default function hsl2hex(h:number, s:number, l:number) {
     s /= 100;
     l /= 100;
 
@@ -23,17 +23,17 @@ export default function hsl2hex(h, s, l) {
         r = c; g = 0; b = x;
     }
     // Having obtained RGB, convert channels to hex
-    r = Math.round((r + m) * 255).toString(16);
-    g = Math.round((g + m) * 255).toString(16);
-    b = Math.round((b + m) * 255).toString(16);
+    let hexr = Math.round((r + m) * 255).toString(16) as string;
+    let hexg = Math.round((g + m) * 255).toString(16) as string;
+    let hexb = Math.round((b + m) * 255).toString(16) as string;
 
     // Prepend 0s, if necessary
-    if (r.length == 1)
-        r = "0" + r;
-    if (g.length == 1)
-        g = "0" + g;
-    if (b.length == 1)
-        b = "0" + b;
+    if (hexr.length == 1)
+        hexr = "0" + hexr;
+    if (hexg.length == 1)
+        hexg = "0" + hexg;
+    if (hexb.length == 1)
+        hexb = "0" + hexb;
 
-    return "#" + r + g + b;
+    return "#" + hexr + hexg + hexb;
 }

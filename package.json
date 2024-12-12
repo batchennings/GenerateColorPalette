@@ -31,9 +31,7 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "start-concurrently",
-        "start-webpack": "webpack",
-        "start-server": "node server/app.js"
+        "build": "tsc"
     },
     "repository": {
         "type": "git",

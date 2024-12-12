@@ -1,7 +1,6 @@
 import hex2rgb from "./utils/hex2rgb";
 import hsl2hex from "./utils/hsl2hex";
 import rgb2hsl from "./utils/rgb2hsl";
-import scale from "./utils/scale";
 
 const HUE_COEFF_TO_LIGHT = 0.5;
 const HUE_COEFF_TO_DARK = 0.5;
@@ -26,8 +25,8 @@ function getSwatchPosition(luminosity: number) {
 
 // Le coeur de l'app : permet d'obtenir une palette de couleur depuis une couleur de base
 export default function getColorsPalette(color: string) {
-    const rgbValue = hex2rgb(color);
-    const hslValue = rgb2hsl(rgbValue.r, rgbValue.g, rgbValue.b);
+    const rgbValue = hex2rgb({hex: color});
+    const hslValue = rgb2hsl({r:rgbValue.r, g:rgbValue.g, b:rgbValue.b});
 
     const colorsArray = Array(HUES.length);
 
@@ -60,8 +59,8 @@ export default function getColorsPalette(color: string) {
                 l: getLuminosity({baseValue: hslValue.l, currentPosition:i, basePosition:swatchPosition}),
             };
 
-            const newTintHexa = hsl2hex(newTintHsl.h, newTintHsl.s, newTintHsl.l);
-            const newTintRgb = hex2rgb(newTintHexa);
+            const newTintHexa = hsl2hex({h:newTintHsl.h, s:newTintHsl.s, l:newTintHsl.l});
+            const newTintRgb = hex2rgb({hex:newTintHexa});
             colorsArray[i] = {
                 hexa: newTintHexa,
                 rgb: newTintRgb,

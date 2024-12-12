@@ -1,12 +1,17 @@
-export default function rgb2hsl(r, g, b) {
+interface rgbArgs{
+    r:number;
+    g:number;
+    b:number;
+}
+export default function rgb2hsl(args:rgbArgs) {
     // Make r, g, and b fractions of 1
-    r /= 255;
-    g /= 255;
-    b /= 255;
+    args.r /= 255;
+    args.g /= 255;
+    args.b /= 255;
 
     // Find greatest and smallest channel values
-    let cmin = Math.min(r, g, b),
-        cmax = Math.max(r, g, b),
+    let cmin = Math.min(args.r, args.g, args.b),
+        cmax = Math.max(args.r, args.g, args.b),
         delta = cmax - cmin,
         h = 0,
         s = 0,
@@ -17,14 +22,14 @@ export default function rgb2hsl(r, g, b) {
     if (delta === 0)
         h = 0;
     // Red is max
-    else if (cmax === r)
-        h = ((g - b) / delta) % 6;
+    else if (cmax === args.r)
+        h = ((args.g - args.b) / delta) % 6;
     // Green is max
-    else if (cmax === g)
-        h = (b - r) / delta + 2;
+    else if (cmax === args.g)
+        h = (args.b - args.r) / delta + 2;
     // Blue is max
     else
-        h = (r - g) / delta + 4;
+        h = (args.r - args.g) / delta + 4;
 
     h = Math.round(h * 60);
 

@@ -3,7 +3,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: ['./client/js/index.js', './client/sass/index.scss'],
+    entry: ['./src/js/index.js', './src/sass/index.scss'],
     output: {
    path: path.resolve(__dirname, 'dist'),
    filename: 'js/bundle.js'
@@ -51,7 +51,7 @@ module.exports = {
 	new CopyPlugin({
 	    patterns: [
 		{
-		    from: 'client/assets',
+		    from: 'src/assets',
 		    to: 'assets' // copies all files to dist/assets
 		}
 	    ]

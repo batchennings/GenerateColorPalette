@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "Starter kit with webpack",
     "main": "index.js",
+    "type": "module",
     "dependencies": {
         "body-parser": "^1.20.1",
         "bootstrap": "^5.2.3",

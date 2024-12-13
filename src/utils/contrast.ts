@@ -1,4 +1,3 @@
-import { log } from "console";
 import { rgbChannels } from "../interfaces/rgbChannels";
 
 const RED = 0.2126;

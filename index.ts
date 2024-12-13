@@ -3,7 +3,7 @@ import contrast from "./src/utils/contrast";
 import { rgbChannels } from "./src/interfaces/rgbChannels";
 
 export default function generatePalette(color:string){
-    const colorsPalette:object = generate(color);
+    const colorsPalette:Array<Object> = generate(color);
     return colorsPalette;
 }
 

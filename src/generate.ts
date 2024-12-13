@@ -29,7 +29,7 @@ export default function generate(color: string) {
     const rgbValue = hex2rgb({ hex: color });
     const hslValue = rgb2hsl({ r: rgbValue.r, g: rgbValue.g, b: rgbValue.b });
 
-    const colorsArray = Array(HUES.length);
+    const colorsArray:Array<Object> = Array(HUES.length);
 
     // determiner la position de la couleur dans le nuancier
     //// prendre la valeur de luminosité, (100 - Math.round(value/10))

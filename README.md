@@ -7,8 +7,7 @@ const palette = generatePalette(color);
 console.log(palette);
 ```
 Generate a color palette based on the input color 
-```json
-{
+```js
   [
     {
       hexa: '#fffaeb',
@@ -88,5 +87,4 @@ Generate a color palette based on the input color
       isBase: false
     }
   ]
-}
 ```

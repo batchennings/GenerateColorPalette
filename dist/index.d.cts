@@ -1,3 +1,10 @@
-declare function generatePalette(color: string): object;
+interface rgbChannels {
+    r: number;
+    g: number;
+    b: number;
+}
 
-export { generatePalette as default };
+declare function generatePalette(color: string): object;
+declare function checkContrast(color1: rgbChannels, color2: rgbChannels): number;
+
+export { checkContrast, generatePalette as default };

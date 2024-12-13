@@ -1,7 +1,7 @@
 import hex2rgb from "./utils/hex2rgb";
 import hsl2hex from "./utils/hsl2hex";
 import rgb2hsl from "./utils/rgb2hsl";
-import contrastCheck from "./utils/contrastCheck";
+import contrastCheck from "./utils/contrast";
 
 const HUE_COEFF_TO_LIGHT = 0.5;
 const HUE_COEFF_TO_DARK = 0.5;

@@ -20,6 +20,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // index.ts
 var generate_color_palette_exports = {};
 __export(generate_color_palette_exports, {
+  checkContrast: () => checkContrast,
   default: () => generatePalette
 });
 module.exports = __toCommonJS(generate_color_palette_exports);
@@ -227,8 +228,37 @@ function checkHue(value) {
   return newHue;
 }
 
+// src/utils/contrast.ts
+var RED = 0.2126;
+var GREEN = 0.7152;
+var BLUE = 0.0722;
+var GAMMA = 2.4;
+function luminance(channels) {
+  let a = [];
+  Object.entries(channels).forEach(([key, value], index) => {
+    value /= 255;
+    a[index] = value <= 0.03928 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, GAMMA);
+  });
+  return a[0] * RED + a[1] * GREEN + a[2] * BLUE;
+}
+function contrast(rgb1, rgb2) {
+  var lum1 = luminance(rgb1);
+  var lum2 = luminance(rgb2);
+  var brightest = Math.max(lum1, lum2);
+  var darkest = Math.min(lum1, lum2);
+  return (brightest + 0.05) / (darkest + 0.05);
+}
+
 // index.ts
 function generatePalette(color) {
   const colorsPalette = generate(color);
   return colorsPalette;
 }
+function checkContrast(color1, color2) {
+  const colorsContrast = contrast(color1, color2);
+  return colorsContrast;
+}
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  checkContrast
+});

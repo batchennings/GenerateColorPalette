@@ -1,6 +1,7 @@
 import hex2rgb from "./utils/hex2rgb";
 import hsl2hex from "./utils/hsl2hex";
 import rgb2hsl from "./utils/rgb2hsl";
+import contrastCheck from "./utils/contrastCheck";
 
 const HUE_COEFF_TO_LIGHT = 0.5;
 const HUE_COEFF_TO_DARK = 0.5;
@@ -19,13 +20,14 @@ function getSwatchPosition(luminosity: number) {
             return position;
         }
     }
+    position = LUMINOSITY_RANGE.length;
     return position;
 }
 
 // Le coeur de l'app : permet d'obtenir une palette de couleur depuis une couleur de base
 export default function generate(color: string) {
-    const rgbValue = hex2rgb({hex: color});
-    const hslValue = rgb2hsl({r:rgbValue.r, g:rgbValue.g, b:rgbValue.b});
+    const rgbValue = hex2rgb({ hex: color });
+    const hslValue = rgb2hsl({ r: rgbValue.r, g: rgbValue.g, b: rgbValue.b });
 
     const colorsArray = Array(HUES.length);
 
@@ -53,13 +55,13 @@ export default function generate(color: string) {
         if (colorsArray[i] == null) {
             //on donne la teinte, saturation, luminosité
             const newTintHsl = {
-                h: getHue({baseValue: hslValue.h, currentPosition:i, basePosition:swatchPosition}),
-                s: getSaturation({baseValue: hslValue.s, currentPosition:i, basePosition:swatchPosition}),
-                l: getLuminosity({baseValue: hslValue.l, currentPosition:i, basePosition:swatchPosition}),
+                h: getHue({ baseValue: hslValue.h, currentPosition: i, basePosition: swatchPosition }),
+                s: getSaturation({ baseValue: hslValue.s, currentPosition: i, basePosition: swatchPosition }),
+                l: getLuminosity({ baseValue: hslValue.l, currentPosition: i, basePosition: swatchPosition }),
             };
 
-            const newTintHexa = hsl2hex({h:newTintHsl.h, s:newTintHsl.s, l:newTintHsl.l});
-            const newTintRgb = hex2rgb({hex:newTintHexa});
+            const newTintHexa = hsl2hex({ h: newTintHsl.h, s: newTintHsl.s, l: newTintHsl.l });
+            const newTintRgb = hex2rgb({ hex: newTintHexa });
             colorsArray[i] = {
                 hexa: newTintHexa,
                 rgb: newTintRgb,
@@ -81,11 +83,12 @@ function getHue(args: hslArgs) {
     if (args.currentPosition < args.basePosition) {
         newHue = args.baseValue - (args.basePosition - args.currentPosition) * HUE_COEFF_TO_LIGHT;
         newHue = checkHue(newHue);
-    }
-    if (args.currentPosition > args.basePosition) {
+    } else if (args.currentPosition > args.basePosition) {
         // si la teinte est plus sombre
         newHue = args.baseValue + (args.currentPosition - args.basePosition) * HUE_COEFF_TO_DARK;
         newHue = checkHue(newHue);
+    } else {
+        newHue = 0;
     }
     return newHue;
 }
@@ -95,12 +98,13 @@ function getSaturation(args: hslArgs) {
     if (args.currentPosition < args.basePosition) {
         // si la teinte est plus claire
         newSaturation = args.baseValue - (args.basePosition - args.currentPosition) * SATURATION_COEFF_TO_LIGHT;
-        newSaturation = checkTreshold({value: newSaturation, threshold: 0, type: "LOW"});
-    }
-    if (args.currentPosition > args.basePosition) {
+        newSaturation = checkTreshold({ value: newSaturation, threshold: 0, type: "LOW" });
+    } else if (args.currentPosition > args.basePosition) {
         // si la teinte est plus sombre
         newSaturation = args.baseValue + (args.currentPosition - args.basePosition) * SATURATION_COEFF_TO_DARK;
-        newSaturation = checkTreshold({value: newSaturation, threshold: 100, type: "HIGH"});
+        newSaturation = checkTreshold({ value: newSaturation, threshold: 100, type: "HIGH" });
+    } else {
+        newSaturation = 0;
     }
     return newSaturation;
 }
@@ -131,6 +135,8 @@ function checkTreshold(args: thresholdArgs) {
     } else if (args.type == "LOW") {
         // si le seuil est la valeur min
         args.value < args.threshold ? (ridge = args.threshold) : (ridge = args.value);
+    } else {
+        ridge = 0;
     }
     return ridge;
 }

@@ -8,5 +8,9 @@ export default function hex2rgb(args: hexInput) {
         r: parseInt(result[1], 16),
         g: parseInt(result[2], 16),
         b: parseInt(result[3], 16)
-    } : null;
+    } : {
+        r: 0,
+        g: 0,
+        b: 0
+    };
 }

@@ -2,7 +2,7 @@ import generatePalette from ".."
 import {describe, expect, test}  from "@jest/globals"
 
 const color = "#FFCC00";
-const palette:Array<Object> = generatePalette(color) 
+const palette:any = generatePalette(color) 
 
 test('Outputs an object', () => {    
     expect(palette).not.toBe(null)

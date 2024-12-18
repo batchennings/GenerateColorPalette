@@ -116,17 +116,6 @@ var SATURATION_COEFF_TO_LIGHT = 0.5;
 var SATURATION_COEFF_TO_DARK = -0.5;
 var HUES = ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900", "950"];
 var LUMINOSITY_RANGE = [96, 90, 82, 73, 55, 47, 39, 31, 23, 15, 10];
-function getSwatchPosition(luminosity) {
-  let position;
-  for (let i = 0; i < LUMINOSITY_RANGE.length; i++) {
-    position = i;
-    if (luminosity > LUMINOSITY_RANGE[i]) {
-      return position;
-    }
-  }
-  position = LUMINOSITY_RANGE.length;
-  return position;
-}
 function generate(color) {
   const rgbValue = hex2rgb({ hex: color });
   const hslValue = rgb2hsl({ r: rgbValue.r, g: rgbValue.g, b: rgbValue.b });
@@ -166,6 +155,17 @@ function generate(color) {
     }
   }
   return colorsArray;
+}
+function getSwatchPosition(luminosity) {
+  let position;
+  for (let i = 0; i < LUMINOSITY_RANGE.length; i++) {
+    position = i;
+    if (luminosity > LUMINOSITY_RANGE[i]) {
+      return position;
+    }
+  }
+  position = LUMINOSITY_RANGE.length;
+  return position;
 }
 function getHue(args) {
   let newHue;
@@ -249,10 +249,23 @@ function contrast(rgb1, rgb2) {
   return (brightest + 0.05) / (darkest + 0.05);
 }
 
+// src/utils/controlColorInput.ts
+function controlColorInput(value) {
+  return true;
+}
+
 // index.ts
 function generatePalette(color) {
   const colorsPalette = generate(color);
-  return colorsPalette;
+  const inputIsValid = controlColorInput(color);
+  switch (inputIsValid) {
+    case true:
+      return colorsPalette;
+      break;
+    default:
+      return null;
+      break;
+  }
 }
 function checkContrast(color1, color2) {
   const colorsContrast = contrast(color1, color2);

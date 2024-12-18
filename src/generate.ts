@@ -11,18 +11,7 @@ const SATURATION_COEFF_TO_DARK = -0.5;
 const HUES = ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900", "950"];
 let LUMINOSITY_RANGE = [96, 90, 82, 73, 55, 47, 39, 31, 23, 15, 10];
 
-function getSwatchPosition(luminosity: number) {
-    let position: number;
 
-    for (let i = 0; i < LUMINOSITY_RANGE.length; i++) {
-        position = i;
-        if (luminosity > LUMINOSITY_RANGE[i]) {
-            return position;
-        }
-    }
-    position = LUMINOSITY_RANGE.length;
-    return position;
-}
 
 // Le coeur de l'app : permet d'obtenir une palette de couleur depuis une couleur de base
 export default function generate(color: string) {
@@ -72,6 +61,18 @@ export default function generate(color: string) {
         }
     }
     return colorsArray;
+}
+function getSwatchPosition(luminosity: number) {
+    let position: number;
+
+    for (let i = 0; i < LUMINOSITY_RANGE.length; i++) {
+        position = i;
+        if (luminosity > LUMINOSITY_RANGE[i]) {
+            return position;
+        }
+    }
+    position = LUMINOSITY_RANGE.length;
+    return position;
 }
 interface hslArgs {
     baseValue: number;

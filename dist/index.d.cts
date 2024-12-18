@@ -4,7 +4,7 @@ interface rgbChannels {
     b: number;
 }
 
-declare function generatePalette(color: string): Object[];
+declare function generatePalette(color: string): Object[] | null;
 declare function checkContrast(color1: rgbChannels, color2: rgbChannels): number;
 
 export { checkContrast, generatePalette as default };
